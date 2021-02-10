@@ -12,7 +12,7 @@ class ChatUser {
     this._send = send; // "send" function for this user
     this.room = Room.get(roomName); // room user will be in
     this.name = null; // becomes the username of the visitor
-
+    this.joke = 'What do you call eight hobbits? A hob-byte!'
     console.log(`created chat in ${this.room.name}`);
   }
 
@@ -46,6 +46,13 @@ class ChatUser {
       text: text
     });
   }
+  handleJoke(){
+    this.room.broadcast({
+      name:this.name,
+      type:'get-joke',
+      text:this.joke
+    })
+  }
 
   /** Handle messages from client:
    *
@@ -58,6 +65,7 @@ class ChatUser {
 
     if (msg.type === 'join') this.handleJoin(msg.name);
     else if (msg.type === 'chat') this.handleChat(msg.text);
+    else if (msg.type === 'get-joke')this.handleJoke()
     else throw new Error(`bad message: ${msg.type}`);
   }
 
